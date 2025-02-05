@@ -1,0 +1,23 @@
+.main-button {
+  .mdc-button__label {
+    font-size: 1rem;
+    text-transform: uppercase;
+  }
+  &.mat-mdc-unelevated-button,
+  .mat-mdc-unelevated-button .mdc-button__ripple {
+    border-radius: $rounded;
+  }
+  // box-shadow: $shadow-tiny;
+}
+
+.warn-button {
+  &.mat-mdc-unelevated-button:not(:disabled) {
+    background-color: $warning;
+  }
+}
+
+.danger-button {
+  &.mat-mdc-unelevated-button:not(:disabled) {
+    background-color: $error;
+  }
+}
