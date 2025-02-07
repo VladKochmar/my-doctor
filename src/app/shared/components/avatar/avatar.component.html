@@ -1,0 +1,7 @@
+<div class="avatar" [style.width.px]="size" [style.height.px]="size">
+  @if(avatar) {
+  <img [src]="'http://localhost:3000/uploads/' + avatar" [alt]="name" class="avatar__img" />
+  } @else {
+  <div class="avatar__default" [style.fontSize.px]="font">{{ name[0] }}</div>
+  }
+</div>

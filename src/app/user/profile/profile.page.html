@@ -1,0 +1,48 @@
+<div class="container user-profile">
+  @if (user) {
+  <form [formGroup]="form" (submit)="onSubmit()" enctype="multipart/form-data" class="user-profile__form profile-form">
+    <div class="profile-form__header">
+      <div class="profile-form__avatar">
+        <md-avatar [avatar]="user.avatar" [name]="user.name" [size]="64" [font]="24"></md-avatar>
+        <md-avatar-selector formControlName="avatar" class="profile-form__avatar-selector"></md-avatar-selector>
+      </div>
+      <h1 class="title-h1">{{ user.name }}</h1>
+    </div>
+    <div class="profile-form__body body-profile-form">
+      <div class="body-profile-form__row">
+        <label for="user_name" class="body-profile-form__label">Name</label>
+        <mat-form-field appearance="outline" class="body-profile-form__inp">
+          <input matInput placeholder="Sean" required formControlName="name" id="user_name" />
+          <mat-error>{{ getError('name', backendErrors) }}</mat-error>
+        </mat-form-field>
+      </div>
+      <div class="body-profile-form__row">
+        <label for="user_email" class="body-profile-form__label">Email</label>
+        <mat-form-field appearance="outline" class="body-profile-form__inp">
+          <input matInput placeholder="user@gmail.com" required formControlName="email" id="user_email" />
+          <mat-error>{{ getError('email', backendErrors) }}</mat-error>
+        </mat-form-field>
+      </div>
+      <div class="body-profile-form__row">
+        <label for="user_phone" class="body-profile-form__label">Phone Number</label>
+        <mat-form-field appearance="outline" class="body-profile-form__inp">
+          <input matInput placeholder="+38 (000) 000 00 00" formControlName="phone_number" id="user_phone" />
+        </mat-form-field>
+      </div>
+      @if (user.role_id === 1) {
+      <div class="body-profile-form__row">
+        <label for="user_bio" class="body-profile-form__label">Your Bio</label>
+        <mat-form-field appearance="outline" class="body-profile-form__inp">
+          <textarea matInput placeholder="Write something about yourself..." formControlName="bio" id="user_bio" [style.height.px]="120"></textarea>
+        </mat-form-field>
+      </div>
+      }
+      <button mat-flat-button class="body-profile-form__button main-button">Save changes</button>
+    </div>
+  </form>
+  <button class="delete-button" (click)="onDelete()">
+    <mat-icon aria-hidden="false" aria-label="camera icon" fontIcon="delete"></mat-icon>
+    Delete account
+  </button>
+  }
+</div>

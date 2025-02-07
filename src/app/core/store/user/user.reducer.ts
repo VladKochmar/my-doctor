@@ -6,6 +6,8 @@ const initialState: UserStateInterface = {
   isLoading: false,
   currentUser: null,
   error: null,
+  errors: null,
+  message: null,
 };
 
 const userFeature = createFeature({
@@ -32,6 +34,50 @@ const userFeature = createFeature({
       ...state,
       currentUser: action.user,
     })),
+
+    on(userActions.updateUserProfile, (state) => ({
+      ...state,
+      isLoading: true,
+      message: null,
+      error: null,
+      errors: null,
+    })),
+
+    on(userActions.updateUserProfileSuccess, (state, action) => ({
+      ...state,
+      isLoading: false,
+      message: action.message,
+      currentUser: action.user,
+    })),
+
+    on(userActions.updateUserProfileFailure, (state, action) => ({
+      ...state,
+      isLoading: false,
+      error: action.error,
+      errors: action.errors,
+    })),
+
+    on(userActions.deleteUser, (state) => ({
+      ...state,
+      isLoading: true,
+      error: null,
+      message: null,
+    })),
+
+    on(userActions.deleteUserSuccess, (state, action) => ({
+      ...state,
+      currentUser: null,
+      isLoading: false,
+      message: action.message,
+    })),
+
+    on(userActions.deleteUserFailure, (state, action) => ({
+      ...state,
+      isLoading: false,
+      error: action.error,
+      message: null,
+    })),
+
     on(userActions.logOut, (state) => ({
       ...state,
       currentUser: null,

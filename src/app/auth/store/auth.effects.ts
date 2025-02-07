@@ -43,18 +43,6 @@ export const registerEffect = createEffect(
   { functional: true }
 );
 
-export const redirectAfterRegisterEffect = createEffect(
-  (actions$ = inject(Actions), router = inject(Router)) => {
-    return actions$.pipe(
-      ofType(authActions.registerSuccess),
-      tap(() => {
-        router.navigateByUrl('/');
-      })
-    );
-  },
-  { functional: true, dispatch: false }
-);
-
 export const loginEffect = createEffect(
   (
     actions$ = inject(Actions),
@@ -86,12 +74,12 @@ export const loginEffect = createEffect(
   { functional: true }
 );
 
-export const redirectAfterLogInEffect = createEffect(
+export const redirectAfterRegisterOrLogInEffect = createEffect(
   (actions$ = inject(Actions), router = inject(Router)) => {
     return actions$.pipe(
-      ofType(authActions.logInSuccess),
+      ofType(authActions.registerSuccess, authActions.logInSuccess),
       tap(() => {
-        router.navigateByUrl('/');
+        router.navigateByUrl('/user/profile');
       })
     );
   },

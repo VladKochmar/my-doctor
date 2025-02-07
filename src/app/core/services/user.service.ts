@@ -4,6 +4,7 @@ import { map, Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { CurrentUserInterface } from '../../shared/models/currentUser.interface';
 import { UserResponseInterface } from '../models/userResponse.interface';
+import { UserOperationsResponseInterface } from '../models/userOperationsResponse.interface';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
@@ -14,5 +15,15 @@ export class UserService {
     return this.http
       .get<UserResponseInterface>(url)
       .pipe(map((response) => response.user));
+  }
+
+  updateUser(userData: FormData): Observable<UserOperationsResponseInterface> {
+    const url = `${environment.apiUrl}/users/update`;
+    return this.http.post<UserOperationsResponseInterface>(url, userData);
+  }
+
+  deleteUser(): Observable<UserOperationsResponseInterface> {
+    const url = `${environment.apiUrl}/users`;
+    return this.http.delete<UserOperationsResponseInterface>(url);
   }
 }
