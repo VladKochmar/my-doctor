@@ -1,0 +1,17 @@
+<div class="container users-services">
+  <h1 class="users-services__title title-h1">My Services</h1>
+  @if (services$ | async; as services) {
+  @if (services.length) {
+  <div class="users-services__list">
+    @for (service of services; track $index) {
+    <div class="users-services__item">
+      <md-service-card [data]="service" role="owner"></md-service-card>
+    </div>
+    }
+  </div>
+  } @else {
+  <p>Currently it's empty</p>
+  }
+  }
+  <a [routerLink]="['/']" mat-flat-button class="users-services__button main-button">ADD NEW SERVICE</a>
+</div>

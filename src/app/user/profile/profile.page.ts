@@ -13,14 +13,16 @@ import {
   Validators,
 } from '@angular/forms';
 import { FormValidation } from '../../core/utils/FormValidation.util';
-import { selectCurrentUser } from '../../core/store/user/user.reducer';
+import {
+  selectCurrentUser,
+  selectErrors,
+} from '../../core/store/user/user.reducer';
 import { userActions } from '../../core/store/user/user.actions';
 import { Subject, takeUntil } from 'rxjs';
 import { CurrentUserInterface } from '../../shared/models/currentUser.interface';
 
 import { FormErrorMessages } from '../../core/utils/FormErrorMessages.util';
 import { BackendErrorsInterface } from '../../shared/models/backendErrors.interface';
-import { selectValidationErrors } from '../../auth/store/auth.reducer';
 import { AvatarSelector } from './components/avatar-selector/avatar-selector.component';
 
 @Component({
@@ -43,7 +45,7 @@ export class UserProfilePage implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
 
   selectedUser$ = this.store.select(selectCurrentUser);
-  selectedBackEndErrors$ = this.store.select(selectValidationErrors);
+  selectedBackEndErrors$ = this.store.select(selectErrors);
 
   form!: FormGroup;
   user: CurrentUserInterface | null = null;

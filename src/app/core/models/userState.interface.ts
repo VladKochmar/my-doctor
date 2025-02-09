@@ -6,5 +6,4 @@ export interface UserStateInterface {
   isLoading: boolean;
   error: string | null;
   errors: BackendErrorsInterface | null;
-  message: string | null;
 }

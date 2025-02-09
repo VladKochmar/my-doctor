@@ -7,7 +7,6 @@ const initialState: UserStateInterface = {
   currentUser: null,
   error: null,
   errors: null,
-  message: null,
 };
 
 const userFeature = createFeature({
@@ -38,7 +37,6 @@ const userFeature = createFeature({
     on(userActions.updateUserProfile, (state) => ({
       ...state,
       isLoading: true,
-      message: null,
       error: null,
       errors: null,
     })),
@@ -46,7 +44,6 @@ const userFeature = createFeature({
     on(userActions.updateUserProfileSuccess, (state, action) => ({
       ...state,
       isLoading: false,
-      message: action.message,
       currentUser: action.user,
     })),
 
@@ -61,21 +58,18 @@ const userFeature = createFeature({
       ...state,
       isLoading: true,
       error: null,
-      message: null,
     })),
 
     on(userActions.deleteUserSuccess, (state, action) => ({
       ...state,
       currentUser: null,
       isLoading: false,
-      message: action.message,
     })),
 
     on(userActions.deleteUserFailure, (state, action) => ({
       ...state,
       isLoading: false,
       error: action.error,
-      message: null,
     })),
 
     on(userActions.logOut, (state) => ({
@@ -89,4 +83,5 @@ export const {
   name: userFeatureKey,
   reducer: userReducer,
   selectCurrentUser,
+  selectErrors,
 } = userFeature;
