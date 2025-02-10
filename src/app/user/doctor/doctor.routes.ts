@@ -8,4 +8,18 @@ export const userRoutes: Routes = [
         (m) => m.DoctorsServicesPage
       ),
   },
+  {
+    path: 'service-editor/:id',
+    loadComponent: () =>
+      import('./pages/service-editor/service-editor.page').then(
+        (m) => m.ServiceEditorPage
+      ),
+  },
+  {
+    path: 'service-editor',
+    loadComponent: () =>
+      import('./pages/service-editor/service-editor.page').then(
+        (m) => m.ServiceEditorPage
+      ),
+  },
 ];

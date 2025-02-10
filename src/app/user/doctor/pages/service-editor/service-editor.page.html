@@ -1,0 +1,45 @@
+<div class="container service-creator">
+  <h1 class="service-creator__title title-h1">
+    {{ isEditMode ? 'Edit Service' : 'Create Service' }}
+  </h1>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="body-profile-form">
+    <div class="body-profile-form__row">
+      <label for="service" class="body-profile-form__label">Service Name</label>
+      <mat-form-field appearance="outline" class="body-profile-form__inp">
+        <mat-select formControlName="service_id" placeholder="Select a service" id="service">
+          @for (template of templates$ | async; track template.template_id) {
+          <mat-option [value]="template.template_id">
+            {{ template.name }}
+          </mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div class="body-profile-form__row">
+      <label for="price" class="body-profile-form__label">Price</label>
+      <mat-form-field appearance="outline" class="body-profile-form__inp">
+        <input matInput formControlName="custom_price" placeholder="Write the price of your service" id="price" />
+      </mat-form-field>
+    </div>
+
+    <div class="body-profile-form__row">
+      <label for="duration" class="body-profile-form__label">Duration</label>
+      <mat-form-field appearance="outline" class="body-profile-form__inp">
+        <input matInput formControlName="custom_duration" placeholder="Write the duration of your service" id="duration" />
+      </mat-form-field>
+    </div>
+
+    <div class="body-profile-form__row">
+      <label for="description" class="body-profile-form__label">Description</label>
+      <mat-form-field appearance="outline" class="body-profile-form__inp">
+        <textarea matInput formControlName="custom_description" placeholder="Write something about service..." [style.height.px]="120" id="description"></textarea>
+      </mat-form-field>
+    </div>
+
+    <button mat-flat-button class="body-profile-form__button main-button">
+      Save changes
+    </button>
+  </form>
+</div>

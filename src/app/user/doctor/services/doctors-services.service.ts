@@ -7,6 +7,9 @@ import { environment } from '../../../../environments/environment';
 import { DoctorServiceInterface } from '../../../shared/models/doctorService.interface';
 import { ServicesResponseInterface } from '../../../shared/models/servicesResponse.interface';
 import { DeleteResponseInterface } from '../../../shared/models/deleteResponse.interface';
+import { ServiceTemplateInterface } from '../../../shared/models/serviceTemplate.interface';
+import { TemplatesResponseInterface } from '../../../shared/models/templatesResponse.interface';
+import { DoctorsServiceRequestInterface } from '../models/doctorsServiceRequest.interface';
 
 @Injectable({ providedIn: 'root' })
 export class DoctorsServicesService {
@@ -17,6 +20,23 @@ export class DoctorsServicesService {
     return this.http
       .get<ServicesResponseInterface>(url)
       .pipe(map((response) => response.data));
+  }
+
+  loadTemplates(): Observable<ServiceTemplateInterface[]> {
+    const url = `${environment.apiUrl}/service-templates`;
+    return this.http
+      .get<TemplatesResponseInterface>(url)
+      .pipe(map((response) => response.data.documents));
+  }
+
+  editService(
+    serviceData: DoctorsServiceRequestInterface,
+    id: number | null = null
+  ): Observable<string> {
+    const url = `${environment.apiUrl}/services/form${id ? '/' + id : ''}`;
+    return this.http
+      .post<{ message: string }>(url, serviceData)
+      .pipe(map((response) => response.message));
   }
 
   deleteDoctorsService(id: number): Observable<string> {

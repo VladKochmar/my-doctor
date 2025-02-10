@@ -16,7 +16,7 @@
     @if (role === 'viewer') {
     <button (click)="openDialog()" mat-flat-button class="service-card__button small-btn main-button">Book</button>
     } @else {
-    <a [routerLink]="['/service-editor', data.id]" mat-flat-button class="small-btn warn-button main-button">Edit</a>
+    <a [routerLink]="['/user/doctor/service-editor', data.id]" mat-flat-button class="small-btn warn-button main-button">Edit</a>
     <button (click)="onDelete()" mat-flat-button class="small-btn danger-button main-button">Delete</button>
     }
   </div>
