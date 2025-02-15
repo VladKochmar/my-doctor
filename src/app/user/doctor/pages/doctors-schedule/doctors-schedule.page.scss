@@ -1,0 +1,20 @@
+.schedule-creator {
+  // .schedule-creator__title
+  &__title {
+    &:not(:last-child) {
+      margin-bottom: 1rem;
+    }
+  }
+}
+.schedule-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem 0;
+  max-width: 740px;
+  // .schedule-form__row
+  &__row {
+    display: inline-flex;
+    gap: 0 1.5rem;
+    align-items: center;
+  }
+}

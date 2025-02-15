@@ -22,4 +22,11 @@ export const userRoutes: Routes = [
         (m) => m.ServiceEditorPage
       ),
   },
+  {
+    path: 'schedule',
+    loadComponent: () =>
+      import('./pages/doctors-schedule/doctors-schedule.page').then(
+        (m) => m.DoctorsSchedulePage
+      ),
+  },
 ];

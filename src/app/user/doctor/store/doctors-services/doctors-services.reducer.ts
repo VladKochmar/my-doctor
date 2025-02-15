@@ -6,6 +6,8 @@ const initialState: DoctorsServicesStateInterface = {
   isLoading: false,
   services: null,
   templates: null,
+  schedules: null,
+  validationErrors: null,
 };
 
 const doctorsServicesFeature = createFeature({
@@ -75,6 +77,37 @@ const doctorsServicesFeature = createFeature({
       ...state,
       isLoading: false,
       services: null,
+    })),
+
+    // Schedules
+    on(doctorsServicesActions.loadSchedules, (state) => ({
+      ...state,
+      isLoading: true,
+    })),
+    on(doctorsServicesActions.loadSchedulesSuccess, (state, action) => ({
+      ...state,
+      schedules: action.schedules,
+      isLoading: false,
+    })),
+    on(doctorsServicesActions.loadSchedulesFailure, (state) => ({
+      ...state,
+      isLoading: false,
+      schedules: null,
+    })),
+
+    on(doctorsServicesActions.saveSchedules, (state) => ({
+      ...state,
+      isLoading: true,
+      validationErrors: null,
+    })),
+    on(doctorsServicesActions.saveSchedulesSuccess, (state) => ({
+      ...state,
+      isLoading: false,
+    })),
+    on(doctorsServicesActions.saveSchedulesFailure, (state, action) => ({
+      ...state,
+      isLoading: false,
+      validationErrors: action.errors,
     }))
   ),
 });
@@ -84,4 +117,6 @@ export const {
   reducer: doctorsServicesReducer,
   selectServices,
   selectTemplates,
+  selectSchedules,
+  selectValidationErrors,
 } = doctorsServicesFeature;

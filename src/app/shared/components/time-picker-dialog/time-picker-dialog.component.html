@@ -1,0 +1,23 @@
+<h2 mat-dialog-title>Select Time</h2>
+<mat-dialog-content>
+  <mat-form-field>
+    <mat-label>Hours</mat-label>
+    <mat-select [(value)]="hours">
+      @for (h of hoursList; track $index) {
+      <mat-option [value]="h">{{ h }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Minutes</mat-label>
+    <mat-select [(value)]="minutes">
+      @for (m of minutesList; track $index) {
+      <mat-option [value]="m">{{ m }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-flat-button (click)="close()" class="main-button">OK</button>
+</mat-dialog-actions>

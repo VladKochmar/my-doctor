@@ -52,3 +52,9 @@
     max-width: 36.25rem;
   }
 }
+
+.hide-subscript {
+  .mat-mdc-form-field-subscript-wrapper.mat-mdc-form-field-bottom-align {
+    display: none;
+  }
+}

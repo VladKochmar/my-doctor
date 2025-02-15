@@ -2,6 +2,8 @@ import { createActionGroup, emptyProps, props } from '@ngrx/store';
 import { DoctorServiceInterface } from '../../../../shared/models/doctorService.interface';
 import { ServiceTemplateInterface } from '../../../../shared/models/serviceTemplate.interface';
 import { DoctorsServiceRequestInterface } from '../../models/doctorsServiceRequest.interface';
+import { DoctorsScheduleInterface } from '../../models/doctorsSchedule.interface';
+import { BackendErrorsInterface } from '../../../../shared/models/backendErrors.interface';
 
 export const doctorsServicesActions = createActionGroup({
   source: 'doctorsServices',
@@ -30,5 +32,18 @@ export const doctorsServicesActions = createActionGroup({
     'Delete doctor service': props<{ serviceId: number }>(),
     'Delete doctor service success': props<{ id: number; message: string }>(),
     'Delete doctor service failure': props<{ error: string }>(),
+
+    'Load schedules': emptyProps(),
+    'Load schedules success': props<{
+      schedules: DoctorsScheduleInterface[];
+    }>(),
+    'Load schedules failure': props<{ error: string }>(),
+
+    'Save schedules': props<{ schedulesData: DoctorsScheduleInterface[] }>(),
+    'Save schedules success': props<{ message: string }>(),
+    'Save schedules failure': props<{
+      error: string;
+      errors: BackendErrorsInterface;
+    }>(),
   },
 });

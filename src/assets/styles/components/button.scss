@@ -3,8 +3,8 @@
     font-size: 1rem;
     text-transform: uppercase;
   }
-  &.mat-mdc-unelevated-button,
-  .mat-mdc-unelevated-button .mdc-button__ripple {
+  &.mdc-button,
+  .mat-mdc-button-base .mdc-button__ripple {
     border-radius: $rounded;
   }
   // box-shadow: $shadow-tiny;

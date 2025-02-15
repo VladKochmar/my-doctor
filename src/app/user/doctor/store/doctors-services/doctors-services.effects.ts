@@ -7,6 +7,7 @@ import { doctorsServicesActions } from './doctors-services.actions';
 import { DoctorsServicesService } from '../../services/doctors-services.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
+import { DoctorsScheduleService } from '../../services/doctors-schedule.service';
 
 export const loadDoctorsServicesEffect = createEffect(
   (
@@ -128,6 +129,60 @@ export const deleteEffect = createEffect(
           )
         );
       })
+    );
+  },
+  { functional: true }
+);
+
+export const loadDoctorsSchedulesEffect = createEffect(
+  (
+    actions$ = inject(Actions),
+    doctorsScheduleService = inject(DoctorsScheduleService)
+  ) => {
+    return actions$.pipe(
+      ofType(doctorsServicesActions.loadSchedules),
+      switchMap(() =>
+        doctorsScheduleService.loadDoctorsSchedule().pipe(
+          map((schedules) =>
+            doctorsServicesActions.loadSchedulesSuccess({ schedules })
+          ),
+          catchError((errorResponse: HttpErrorResponse) =>
+            of(
+              doctorsServicesActions.loadSchedulesFailure({
+                error: errorResponse.error.error,
+              })
+            )
+          )
+        )
+      )
+    );
+  },
+  { functional: true }
+);
+
+export const saveDoctorsScheduleEffect = createEffect(
+  (
+    actions$ = inject(Actions),
+    doctorsScheduleService = inject(DoctorsScheduleService)
+  ) => {
+    return actions$.pipe(
+      ofType(doctorsServicesActions.saveSchedules),
+      switchMap(({ schedulesData }) =>
+        doctorsScheduleService.saveDoctorsSchedule(schedulesData).pipe(
+          mergeMap((message) => [
+            doctorsServicesActions.saveSchedulesSuccess({ message }),
+            doctorsServicesActions.loadSchedules(),
+          ]),
+          catchError((errorResponse: HttpErrorResponse) =>
+            of(
+              doctorsServicesActions.saveSchedulesFailure({
+                error: errorResponse.error.error,
+                errors: errorResponse.error.errors,
+              })
+            )
+          )
+        )
+      )
     );
   },
   { functional: true }

@@ -1,0 +1,34 @@
+<div class="container schedule-creator">
+  <h1 class="schedule-creator__title title-h1">Your Schedule</h1>
+  <form [formGroup]="form" (submit)="onSubmit()" class="schedule-form">
+    <ng-container formArrayName="schedules">
+      @for (schedule of schedules.controls; track $index) {
+      <div [formGroupName]="$index" class="schedule-form__row">
+        <mat-form-field appearance="outline" class="hide-subscript">
+          <mat-label>Day of Week</mat-label>
+          <mat-select formControlName="day_of_week" placeholder="Select a day">
+            @for (day of days; track $index) {
+            <mat-option [value]="day">{{ day }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="hide-subscript">
+          <mat-label>Start time</mat-label>
+          <input matInput [value]="schedule.get('start_time')?.value" readonly (click)="openTimePicker(getFormControl(schedule, 'start_time'))" placeholder="Start time">
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="hide-subscript">
+          <mat-label>End time</mat-label>
+          <input matInput [value]="schedule.get('end_time')?.value" readonly (click)="openTimePicker(getFormControl(schedule, 'end_time'))" placeholder="End time">
+        </mat-form-field>
+        <button mat-icon-button type="button" (click)="removeSchedule($index)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+      } @empty {
+      <p>It's currently empty</p>
+      }
+    </ng-container>
+    <button mat-stroked-button type="button" (click)="addSchedule()" class="main-button">Add schedule <mat-icon>add_circle</mat-icon></button>
+    <button mat-flat-button type="submit" class="main-button">Save</button>
+  </form>
+</div>
