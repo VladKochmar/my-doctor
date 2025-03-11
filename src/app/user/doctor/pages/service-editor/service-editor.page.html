@@ -14,6 +14,7 @@
           </mat-option>
           }
         </mat-select>
+        <mat-error>{{ getError('service_id') }}</mat-error>
       </mat-form-field>
     </div>
 
@@ -21,6 +22,7 @@
       <label for="price" class="body-profile-form__label">Price</label>
       <mat-form-field appearance="outline" class="body-profile-form__inp">
         <input matInput formControlName="custom_price" placeholder="Write the price of your service" id="price" />
+        <mat-error>{{ getError('custom_price') }}</mat-error>
       </mat-form-field>
     </div>
 
@@ -28,6 +30,7 @@
       <label for="duration" class="body-profile-form__label">Duration</label>
       <mat-form-field appearance="outline" class="body-profile-form__inp">
         <input matInput formControlName="custom_duration" placeholder="Write the duration of your service" id="duration" />
+        <mat-error>{{ getError('custom_duration') }}</mat-error>
       </mat-form-field>
     </div>
 
@@ -35,6 +38,7 @@
       <label for="description" class="body-profile-form__label">Description</label>
       <mat-form-field appearance="outline" class="body-profile-form__inp">
         <textarea matInput formControlName="custom_description" placeholder="Write something about service..." [style.height.px]="120" id="description"></textarea>
+        <mat-error>{{ getError('custom_description') }}</mat-error>
       </mat-form-field>
     </div>
 

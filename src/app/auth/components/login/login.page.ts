@@ -1,4 +1,10 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  OnInit,
+  signal,
+} from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -9,7 +15,6 @@ import {
 import { combineLatest, Observable } from 'rxjs';
 
 import { FormValidation } from '../../../core/utils/FormValidation.util';
-import { FormErrorMessages } from '../../../core/utils/FormErrorMessages.util';
 
 import { Store } from '@ngrx/store';
 import { authActions } from '../../store/auth.actions';
@@ -30,7 +35,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 
 import { RouterLink } from '@angular/router';
-import { AsyncPipe, NgIf } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
+import { FormErrorService } from '../../../core/services/form-error.service';
 
 @Component({
   selector: 'md-login',
@@ -43,13 +49,14 @@ import { AsyncPipe, NgIf } from '@angular/common';
     MatIconModule,
     RouterLink,
     AsyncPipe,
-    NgIf,
   ],
   templateUrl: './login.page.html',
   styleUrl: './login.page.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LogInPage implements OnInit {
   private fb = inject(FormBuilder);
+  private formError = inject(FormErrorService);
   private store = inject<Store<{ auth: AuthStateInterface }>>(Store);
 
   form!: FormGroup;
@@ -91,12 +98,7 @@ export class LogInPage implements OnInit {
     backendErrors: BackendErrorsInterface | null
   ): string | null {
     const control = this.form.get(controlName);
-    return control
-      ? FormErrorMessages.getErrorMessage(
-          control,
-          backendErrors?.[controlName] ?? null
-        )
-      : null;
+    return this.formError.getError(control, controlName, backendErrors);
   }
 
   onSubmit(): void {

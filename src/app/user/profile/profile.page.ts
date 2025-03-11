@@ -1,4 +1,11 @@
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  inject,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
 import { AvatarComponent } from '../../shared/components/avatar/avatar.component';
 
 import { Store } from '@ngrx/store';
@@ -19,11 +26,12 @@ import {
 } from '../../core/store/user/user.reducer';
 import { userActions } from '../../core/store/user/user.actions';
 import { Subject, takeUntil } from 'rxjs';
-import { CurrentUserInterface } from '../../shared/models/currentUser.interface';
 
-import { FormErrorMessages } from '../../core/utils/FormErrorMessages.util';
+import { CurrentUserInterface } from '../../shared/models/currentUser.interface';
 import { BackendErrorsInterface } from '../../shared/models/backendErrors.interface';
+
 import { AvatarSelector } from './components/avatar-selector/avatar-selector.component';
+import { FormErrorService } from '../../core/services/form-error.service';
 
 @Component({
   selector: 'md-user-profile',
@@ -38,10 +46,13 @@ import { AvatarSelector } from './components/avatar-selector/avatar-selector.com
   ],
   templateUrl: './profile.page.html',
   styleUrl: './profile.page.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserProfilePage implements OnInit, OnDestroy {
   private fb = inject(FormBuilder);
   private store = inject(Store);
+  private cdr = inject(ChangeDetectorRef);
+  private formError = inject(FormErrorService);
   private destroy$ = new Subject<void>();
 
   selectedUser$ = this.store.select(selectCurrentUser);
@@ -56,7 +67,8 @@ export class UserProfilePage implements OnInit, OnDestroy {
     this.selectedBackEndErrors$
       .pipe(takeUntil(this.destroy$))
       .subscribe((errors) => {
-        this.backendErrors = errors;
+        this.backendErrors = { ...errors };
+        this.cdr.markForCheck();
       });
 
     this.selectedUser$
@@ -104,17 +116,9 @@ export class UserProfilePage implements OnInit, OnDestroy {
     this.store.dispatch(userActions.updateUserProfile({ request: formData }));
   }
 
-  getError(
-    controlName: string,
-    backendErrors: BackendErrorsInterface | null
-  ): string | null {
+  getError(controlName: string): string | null {
     const control = this.form.get(controlName);
-    return control
-      ? FormErrorMessages.getErrorMessage(
-          control,
-          backendErrors?.[controlName] ?? null
-        )
-      : null;
+    return this.formError.getError(control, controlName, this.backendErrors);
   }
 
   onDelete(): void {

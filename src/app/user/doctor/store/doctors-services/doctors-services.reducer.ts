@@ -51,15 +51,21 @@ const doctorsServicesFeature = createFeature({
     on(doctorsServicesActions.editService, (state) => ({
       ...state,
       isLoading: true,
+      validationErrors: null,
     })),
     on(doctorsServicesActions.editServiceSuccess, (state) => ({
       ...state,
       isLoading: false,
     })),
-    on(doctorsServicesActions.editSerivceFailure, (state) => ({
-      ...state,
-      isLoading: false,
-    })),
+    on(doctorsServicesActions.editSerivceFailure, (state, action) => {
+      console.log('action.errors', action.errors);
+
+      return {
+        ...state,
+        isLoading: false,
+        validationErrors: action.errors,
+      };
+    }),
 
     // Delete
     on(doctorsServicesActions.deleteDoctorService, (state) => ({

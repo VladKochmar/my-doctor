@@ -4,21 +4,44 @@
     <ng-container formArrayName="schedules">
       @for (schedule of schedules.controls; track $index) {
       <div [formGroupName]="$index" class="schedule-form__row">
-        <mat-form-field appearance="outline" class="hide-subscript">
+        <mat-form-field appearance="outline">
           <mat-label>Day of Week</mat-label>
           <mat-select formControlName="day_of_week" placeholder="Select a day">
             @for (day of days; track $index) {
             <mat-option [value]="day">{{ day }}</mat-option>
             }
           </mat-select>
+          <mat-hint>Day of week</mat-hint>
+          @if (schedule.get('day_of_week')?.hasError('required')) {
+          <mat-error>
+            Day of week is required.
+          </mat-error>
+          }
         </mat-form-field>
-        <mat-form-field appearance="outline" class="hide-subscript">
+        <mat-form-field appearance="outline">
           <mat-label>Start time</mat-label>
           <input matInput [value]="schedule.get('start_time')?.value" readonly (click)="openTimePicker(getFormControl(schedule, 'start_time'))" placeholder="Start time">
+          <mat-hint>Start time</mat-hint>
+          @if (schedule.get('start_time')?.hasError('required')) {
+          <mat-error>
+            Start time is required.
+          </mat-error>
+          }
         </mat-form-field>
-        <mat-form-field appearance="outline" class="hide-subscript">
+        <mat-form-field appearance="outline">
           <mat-label>End time</mat-label>
           <input matInput [value]="schedule.get('end_time')?.value" readonly (click)="openTimePicker(getFormControl(schedule, 'end_time'))" placeholder="End time">
+          <mat-hint>End time</mat-hint>
+          @if (schedule.get('end_time')?.hasError('required')) {
+          <mat-error>
+            End time is required.
+          </mat-error>
+          }
+          @if (schedule.get('end_time')?.hasError('endTimeBeforeStartTime')) {
+          <mat-error>
+            End time must be later than start time.
+          </mat-error>
+          }
         </mat-form-field>
         <button mat-icon-button type="button" (click)="removeSchedule($index)">
           <mat-icon>delete</mat-icon>

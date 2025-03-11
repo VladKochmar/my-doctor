@@ -27,6 +27,7 @@ export const doctorsServicesActions = createActionGroup({
     'Edit service success': props<{ message: string }>(),
     'Edit serivce failure': props<{
       error: string;
+      errors: BackendErrorsInterface;
     }>(),
 
     'Delete doctor service': props<{ serviceId: number }>(),

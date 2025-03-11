@@ -9,6 +9,8 @@ export class FormErrorMessages {
     letterRequired: 'Must contain at least one letter',
     numberRequired: 'Must contain at least one number',
     lettersOnly: 'Must contain only letters',
+    numbersOnly: 'Must contain only numbers',
+    endTimeBeforeStartTime: 'End time must be later than start time!',
   };
 
   static getClientErrorMessage(control: AbstractControl): string | null {
@@ -37,10 +39,8 @@ export class FormErrorMessages {
 
   static getErrorMessage(
     control: AbstractControl,
-    backendErrors: string[] | null
+    backendError: string | null
   ): string | null {
-    return backendErrors && backendErrors.length > 0
-      ? backendErrors[0]
-      : this.getClientErrorMessage(control);
+    return backendError ?? this.getClientErrorMessage(control);
   }
 }

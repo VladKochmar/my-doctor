@@ -1,23 +1,25 @@
-<ng-container *ngIf="data$ | async as data">
-  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="auth-form">
-    <h1 class="auth-form__title title-h2">Log In</h1>
-    <mat-form-field appearance="outline">
-      <mat-label>Enter your email</mat-label>
-      <input matInput type="email" placeholder="user@gmail.com" required formControlName="email" />
-      <mat-hint>Avoid using temporary or disposable email addresses</mat-hint>
-      <mat-error>{{ getError('email', data.backendErrors) }}</mat-error>
-    </mat-form-field>
-    <mat-form-field appearance="outline">
-      <mat-label>Enter your password</mat-label>
-      <input matInput [type]="hide() ? 'password' : 'text'" formControlName="password" />
-      <button type="button" mat-icon-button matSuffix (click)="clickEvent($event)" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide()">
-        <mat-icon>{{hide() ? 'visibility_off' : 'visibility'}}</mat-icon>
-      </button>
-      <mat-hint>Min 8 characters</mat-hint>
-      <mat-error>{{ getError('password', data.backendErrors) }}</mat-error>
-    </mat-form-field>
-    <p *ngIf="data.error" class="auth-form__error">{{ data.error }}</p>
-    <button mat-flat-button class="main-button" [disabled]="data.isSubmitting">Submit</button>
-  </form>
-  <p class="auth-msg">Not a member? <a [routerLink]="['/auth/sign-up']" class="auth-msg__link">Sign Up</a></p>
-</ng-container>
+@if (data$ | async; as data) {
+<form [formGroup]="form" (ngSubmit)="onSubmit()" class="auth-form">
+  <h1 class="auth-form__title title-h2">Log In</h1>
+  <mat-form-field appearance="outline">
+    <mat-label>Enter your email</mat-label>
+    <input matInput type="email" placeholder="user@gmail.com" required formControlName="email" />
+    <mat-hint>Avoid using temporary or disposable email addresses</mat-hint>
+    <mat-error>{{ getError('email', data.backendErrors) }}</mat-error>
+  </mat-form-field>
+  <mat-form-field appearance="outline">
+    <mat-label>Enter your password</mat-label>
+    <input matInput [type]="hide() ? 'password' : 'text'" formControlName="password" />
+    <button type="button" mat-icon-button matSuffix (click)="clickEvent($event)" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide()">
+      <mat-icon>{{hide() ? 'visibility_off' : 'visibility'}}</mat-icon>
+    </button>
+    <mat-hint>Min 8 characters</mat-hint>
+    <mat-error>{{ getError('password', data.backendErrors) }}</mat-error>
+  </mat-form-field>
+  @if (data.error) {
+  <p class="auth-form__error">{{ data.error }}</p>
+  }
+  <button mat-flat-button class="main-button" [disabled]="data.isSubmitting">Submit</button>
+</form>
+<p class="auth-msg">Not a member? <a [routerLink]="['/auth/sign-up']" class="auth-msg__link">Sign Up</a></p>
+}

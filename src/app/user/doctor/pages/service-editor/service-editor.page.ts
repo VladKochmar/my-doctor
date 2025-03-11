@@ -1,4 +1,11 @@
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  inject,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AsyncPipe } from '@angular/common';
 
@@ -6,6 +13,7 @@ import { Store } from '@ngrx/store';
 import {
   selectServices,
   selectTemplates,
+  selectValidationErrors,
 } from '../../store/doctors-services/doctors-services.reducer';
 import { doctorsServicesActions } from '../../store/doctors-services/doctors-services.actions';
 
@@ -33,6 +41,9 @@ import {
 
 import { ServiceTemplateInterface } from '../../../../shared/models/serviceTemplate.interface';
 import { DoctorsServiceRequestInterface } from '../../models/doctorsServiceRequest.interface';
+import { BackendErrorsInterface } from '../../../../shared/models/backendErrors.interface';
+import { FormErrorService } from '../../../../core/services/form-error.service';
+import { FormValidation } from '../../../../core/utils/FormValidation.util';
 
 @Component({
   selector: 'md-service-editor',
@@ -46,25 +57,31 @@ import { DoctorsServiceRequestInterface } from '../../models/doctorsServiceReque
   ],
   templateUrl: './service-editor.page.html',
   styleUrl: './service-editor.page.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ServiceEditorPage implements OnInit, OnDestroy {
   private fb = inject(FormBuilder);
   private store = inject(Store);
   private route = inject(ActivatedRoute);
+  private formError = inject(FormErrorService);
+  private cdr = inject(ChangeDetectorRef);
   private destroy$ = new Subject<void>();
 
   serviceId: number | null = null;
   isEditMode: boolean = false;
+  validationErros: BackendErrorsInterface | null = null;
 
   form: FormGroup = this.fb.nonNullable.group({
     service_id: this.fb.control<null | number>(null, [Validators.required]),
-    custom_price: this.fb.control<number>(0, [
+    custom_price: this.fb.control<null | number>(null, [
       Validators.required,
       Validators.min(0),
+      FormValidation.numbersOnly,
     ]),
-    custom_duration: this.fb.control<number>(0, [
+    custom_duration: this.fb.control<null | number>(null, [
       Validators.required,
-      Validators.min(0),
+      Validators.min(1),
+      FormValidation.numbersOnly,
     ]),
     custom_description: this.fb.control<string>('', [Validators.required]),
   });
@@ -93,12 +110,20 @@ export class ServiceEditorPage implements OnInit, OnDestroy {
         }
       })
     );
+  selectedValidationErrors$ = this.store.select(selectValidationErrors);
 
   ngOnInit(): void {
     this.store.dispatch(doctorsServicesActions.loadTemplates());
     this.store.dispatch(doctorsServicesActions.loadDoctorServices());
 
     this.selectedTemplate$.pipe(takeUntil(this.destroy$)).subscribe();
+
+    this.selectedValidationErrors$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((errors) => {
+        this.validationErros = { ...errors };
+        this.cdr.markForCheck();
+      });
 
     combineLatest([
       this.route.params.pipe(
@@ -115,7 +140,6 @@ export class ServiceEditorPage implements OnInit, OnDestroy {
             const service = services?.find((s) => s.id === this.serviceId);
 
             if (service) {
-              console.log('service', service);
               this.form.patchValue({
                 service_id: service.service_id,
                 custom_price: service.price,
@@ -128,6 +152,11 @@ export class ServiceEditorPage implements OnInit, OnDestroy {
         takeUntil(this.destroy$)
       )
       .subscribe();
+  }
+
+  getError(controlName: string): string | null {
+    const control = this.form.get(controlName);
+    return this.formError.getError(control, controlName, this.validationErros);
   }
 
   onSubmit(): void {

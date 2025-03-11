@@ -1,4 +1,10 @@
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  inject,
+  OnInit,
+} from '@angular/core';
 import {
   AbstractControl,
   FormArray,
@@ -8,7 +14,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { filter, Subject, take, takeUntil } from 'rxjs';
+import { filter, take } from 'rxjs';
 
 import { Store } from '@ngrx/store';
 
@@ -22,13 +28,9 @@ import { MatDialog } from '@angular/material/dialog';
 import { TimePickerDialogComponent } from '../../../../shared/components/time-picker-dialog/time-picker-dialog.component';
 import { doctorsServicesActions } from '../../store/doctors-services/doctors-services.actions';
 import { DoctorsScheduleInterface } from '../../models/doctorsSchedule.interface';
-import {
-  selectSchedules,
-  selectValidationErrors,
-} from '../../store/doctors-services/doctors-services.reducer';
+import { selectSchedules } from '../../store/doctors-services/doctors-services.reducer';
 import { ScheduleFormInterface } from '../../models/scheduleForm.interface';
-import { BackendErrorsInterface } from '../../../../shared/models/backendErrors.interface';
-import { FormErrorMessages } from '../../../../core/utils/FormErrorMessages.util';
+import { FormValidation } from '../../../../core/utils/FormValidation.util';
 
 @Component({
   selector: 'md-doctors-schedule',
@@ -42,13 +44,13 @@ import { FormErrorMessages } from '../../../../core/utils/FormErrorMessages.util
   ],
   templateUrl: './doctors-schedule.page.html',
   styleUrl: './doctors-schedule.page.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DoctorsSchedulePage implements OnInit, OnDestroy {
+export class DoctorsSchedulePage implements OnInit {
   private fb = inject(FormBuilder);
+  private cdr = inject(ChangeDetectorRef);
   private dialog = inject(MatDialog);
   private store = inject(Store);
-
-  private destroy$ = new Subject<void>();
 
   days: DayType[] = [
     'Monday',
@@ -77,7 +79,10 @@ export class DoctorsSchedulePage implements OnInit, OnDestroy {
         filter((schedules) => !!schedules),
         take(1)
       )
-      .subscribe((schedules) => this.populateSchedules(schedules));
+      .subscribe((schedules) => {
+        this.populateSchedules(schedules);
+        this.cdr.markForCheck();
+      });
   }
 
   private populateSchedules(schedules: DoctorsScheduleInterface[]): void {
@@ -86,15 +91,20 @@ export class DoctorsSchedulePage implements OnInit, OnDestroy {
     );
     const formArray = this.fb.array(scheduleFormGroups);
     this.form.setControl('schedules', formArray);
+
+    this.form.updateValueAndValidity({ onlySelf: false, emitEvent: true });
   }
 
   private createScheduleFormGroup(
     scheduleGroup: ScheduleFormInterface | null = null
   ): FormGroup {
     return this.fb.nonNullable.group({
-      day_of_week: [scheduleGroup?.day_of_week ?? '', [Validators.required]],
-      start_time: [scheduleGroup?.start_time ?? '', [Validators.required]],
-      end_time: [scheduleGroup?.end_time ?? '', [Validators.required]],
+      day_of_week: [scheduleGroup?.day_of_week ?? null, [Validators.required]],
+      start_time: [scheduleGroup?.start_time ?? null, [Validators.required]],
+      end_time: [
+        scheduleGroup?.end_time ?? null,
+        [Validators.required, FormValidation.endTimeBeforeStartTime],
+      ],
     });
   }
 
@@ -135,10 +145,5 @@ export class DoctorsSchedulePage implements OnInit, OnDestroy {
     this.store.dispatch(
       doctorsServicesActions.saveSchedules({ schedulesData })
     );
-  }
-
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
   }
 }

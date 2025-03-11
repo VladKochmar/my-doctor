@@ -13,14 +13,14 @@
         <label for="user_name" class="body-profile-form__label">Name</label>
         <mat-form-field appearance="outline" class="body-profile-form__inp">
           <input matInput placeholder="Sean" required formControlName="name" id="user_name" />
-          <mat-error>{{ getError('name', backendErrors) }}</mat-error>
+          <mat-error>{{ getError('name') }}</mat-error>
         </mat-form-field>
       </div>
       <div class="body-profile-form__row">
         <label for="user_email" class="body-profile-form__label">Email</label>
         <mat-form-field appearance="outline" class="body-profile-form__inp">
           <input matInput placeholder="user@gmail.com" required formControlName="email" id="user_email" />
-          <mat-error>{{ getError('email', backendErrors) }}</mat-error>
+          <mat-error>{{ getError('email') }}</mat-error>
         </mat-form-field>
       </div>
       <div class="body-profile-form__row">

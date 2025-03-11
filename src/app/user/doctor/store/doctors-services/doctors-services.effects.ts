@@ -74,13 +74,16 @@ export const editServiceEffect = createEffect(
             doctorsServicesActions.editServiceSuccess({ message }),
             doctorsServicesActions.loadDoctorServices(),
           ]),
-          catchError((errorResponse: HttpErrorResponse) =>
-            of(
+          catchError((errorResponse: HttpErrorResponse) => {
+            console.log('errorResponse.error', errorResponse.error);
+
+            return of(
               doctorsServicesActions.editSerivceFailure({
                 error: errorResponse.error.error,
+                errors: errorResponse.error.errors,
               })
-            )
-          )
+            );
+          })
         );
       })
     );
